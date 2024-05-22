@@ -19,6 +19,9 @@ class LocalStorageTodosApi extends TodosApi {
 
   final SharedPreferences _plugin;
 
+  // khởi tạo rỗng => khi dữ liệu được thêm hoặc thay đổi trong BS, nó sẽ tự động phát dữ liệu mới đến tất cả listener
+  // Nó sẽ giữ lại giá trị hiện tại của dữ liệu mỗi khi có 1 subscriber mới (listener sẽ nhận đc giá trị ban đầu khởi tạo trc khi nhận dc giá trị mới đc phát ra sau đó)
+  // Thường được sử dụng cần lưu giữ trạng thái hiện tại của dữ liệu và phát cho các thành phần khác.
   late final _todoStreamController = BehaviorSubject<List<Todo>>.seeded(
     const [],
   );
@@ -48,6 +51,7 @@ class LocalStorageTodosApi extends TodosApi {
     }
   }
 
+  //asBroadcastStream cho phép nhiều listener lắng nghe cùng 1 lúc mà không phải tạo nhiều bản sao (cũng không ảnh hương dến nó) => chia sẻ dữ liệu với nhiều thành phần
   @override
   Stream<List<Todo>> getTodos() => _todoStreamController.asBroadcastStream();
 

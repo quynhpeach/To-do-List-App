@@ -40,7 +40,8 @@ class TodosOverviewView extends StatelessWidget {
         listeners: [
           BlocListener<TodosOverviewBloc, TodosOverviewState>(
             listenWhen: (previous, current) =>
-                previous.status != current.status,
+                previous.status !=
+                current.status, //nếu đk này trả về true thì mới gọi listener
             listener: (context, state) {
               if (state.status == TodosOverviewStatus.failure) {
                 ScaffoldMessenger.of(context)
@@ -114,6 +115,8 @@ class TodosOverviewView extends StatelessWidget {
                               ),
                             );
                       },
+                      //Xử lý sự kiện khi người dùng vuốt sang trái/sang phải
+                      //Thường để xự lý các hàng động xoá
                       onDismissed: (_) {
                         context
                             .read<TodosOverviewBloc>()
