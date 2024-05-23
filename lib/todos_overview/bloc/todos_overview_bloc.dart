@@ -11,12 +11,19 @@ class TodosOverviewBloc extends Bloc<TodosOverviewEvent, TodosOverviewState> {
     required TodosRepository todosRepository,
   })  : _todosRepository = todosRepository,
         super(const TodosOverviewState()) {
+    //subscribe to stream
     on<TodosOverviewSubscriptionRequested>(_onSubscriptionRequested);
+    //tick to do hoàn thành
     on<TodosOverviewTodoCompletionToggled>(_onTodoCompletionToggled);
+    //xoá to do
     on<TodosOverviewTodoDeleted>(_onTodoDeleted);
+    //undo 1 to do vừa bị xoá
     on<TodosOverviewUndoDeletionRequested>(_onUndoDeletionRequested);
+    //filter to do
     on<TodosOverviewFilterChanged>(_onFilterChanged);
+    //tick tất cả to do => hoàn thành
     on<TodosOverviewToggleAllRequested>(_onToggleAllRequested);
+    //xoá hết các todo đã complete
     on<TodosOverviewClearCompletedRequested>(_onClearCompletedRequested);
   }
 
@@ -52,6 +59,7 @@ class TodosOverviewBloc extends Bloc<TodosOverviewEvent, TodosOverviewState> {
     TodosOverviewTodoDeleted event,
     Emitter<TodosOverviewState> emit,
   ) async {
+    // emit 1 bản copy của 1 todo sẽ đc xoá
     emit(state.copyWith(lastDeletedTodo: () => event.todo));
     await _todosRepository.deleteTodo(event.todo.id);
   }
